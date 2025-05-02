@@ -21,7 +21,9 @@
     "@mui/material": "^7.0.2",
     "chart.js": "^4.4.9",
     "date-fns": "^4.1.0",
+    "electron-log": "^5.0.1",
     "electron-squirrel-startup": "^1.0.0",
+    "electron-updater": "^6.2.0",
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.0.0",
@@ -35,6 +37,7 @@
     "@electron-forge/maker-zip": "^7.3.0",
     "@electron-forge/plugin-auto-unpack-natives": "^7.3.0",
     "@electron-forge/plugin-vite": "^7.3.0",
+    "@electron-forge/publisher-github": "^7.3.0",
     "@eslint/js": "^9.22.0",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4.1.5",
@@ -53,5 +56,42 @@
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.5",
     "vite": "^6.3.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VisibleSound/TxTrack-Electron.git"
+  },
+  "author": {
+    "name": "Alex Lehman",
+    "email": "alex@visiblesound.com"
+  },
+  "license": "MIT",
+  "build": {
+    "appId": "com.alexlehman.txtrack",
+    "productName": "TxTrack",
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "directories": {
+      "buildResources": "src/assets",
+      "output": "release-builds"
+    },
+    "mac": {
+      "category": "public.app-category.finance",
+      "icon": "src/assets/icons/mac/icon.icns"
+    },
+    "win": {
+      "icon": "src/assets/icons/win/icon.ico"
+    },
+    "linux": {
+      "icon": "src/assets/icons/png",
+      "category": "Finance"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "VisibleSound",
+      "repo": "TxTrack-Electron"
+    }
   }
 }
