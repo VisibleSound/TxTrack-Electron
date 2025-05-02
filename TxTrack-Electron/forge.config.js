@@ -46,7 +46,7 @@ module.exports = {
                 },
                 prerelease: false,
                 draft: true,
-                // Don't include the token directly in the file
+                authToken: process.env.GITHUB_TOKEN
             }
         }
     ],

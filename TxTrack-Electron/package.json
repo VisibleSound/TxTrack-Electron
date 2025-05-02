@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "description": "TxTrack Desktop Application",
-  "main": "electron/main.js",
+  "main": ".vite/build/main.js",
   "scripts": {
     "dev": "concurrently -k \"vite\" \"electron-forge start\"",
     "build": "vite build",

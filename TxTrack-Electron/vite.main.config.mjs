@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import path from 'path';
 
 // https://vitejs.dev/config
 export default defineConfig({
@@ -11,7 +10,7 @@ export default defineConfig({
             fileName: () => '[name].js',
         },
         rollupOptions: {
-            external: ['electron'],
+            external: ['electron', 'electron-updater', 'electron-squirrel-startup'],
         },
         minify: false,
         emptyOutDir: true,
