@@ -1,7 +1,5 @@
 // electron/preload.js
 const { contextBridge, ipcRenderer } = require('electron');
-const fs = require('fs');
-const path = require('path');
 
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
@@ -11,24 +9,7 @@ contextBridge.exposeInMainWorld('electron', {
 });
 
 // Provide an API to access Node.js functionality if needed
-// This allows your React app to interact with the file system securely
 contextBridge.exposeInMainWorld('api', {
-    fs: {
-        readFile: (filePath, options) => {
-            return new Promise((resolve, reject) => {
-                fs.readFile(filePath, options, (err, data) => {
-                    if (err) reject(err);
-                    else resolve(data);
-                });
-            });
-        },
-        writeFile: (filePath, data, options) => {
-            return new Promise((resolve, reject) => {
-                fs.writeFile(filePath, data, options, (err) => {
-                    if (err) reject(err);
-                    else resolve();
-                });
-            });
-        }
-    }
+    // You can add more methods here to interact with Node.js APIs from your React app
+    platform: process.platform
 });

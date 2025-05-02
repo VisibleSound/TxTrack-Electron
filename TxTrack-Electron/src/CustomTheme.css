@@ -1,0 +1,72 @@
+/* Custom theme overrides */
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* Light mode accent color */
+.theme-light .accent-bg {
+    background-color: #1D7AFC !important;
+    color: white !important;
+}
+
+.theme-light .accent-text {
+    color: #1D7AFC !important;
+}
+
+.theme-light .accent-border {
+    border-color: #1D7AFC !important;
+}
+
+
+.theme-light .light-container {
+    background-color: #f3f4f6 !important;
+}
+
+.theme-light .light-container:hover {
+    background-color: #fafafa !important;
+}
+
+/* Dark mode accent color */
+.theme-dark .accent-bg {
+    background-color: #5E4DB2 !important;
+    color: white !important;
+}
+
+.theme-dark .accent-text {
+    color: #5E4DB2 !important;
+}
+
+.theme-dark .accent-border {
+    border-color: #5E4DB2 !important;
+}
+
+/* Force the color for active navigation */
+.active-nav-item.theme-light {
+    background-color: #1D7AFC !important;
+    color: white !important;
+}
+
+.active-nav-item.theme-dark {
+    background-color: #5E4DB2 !important;
+    color: white !important;
+}
+
+.theme-dark .dark-container {
+    background-color: #1b1b1b !important;
+}
+
+.theme-dark .dark-container:hover {
+    background-color: #2a2a2a !important;
+}
+
+.theme-dark .dark-hover {
+    background-color: #2a2a2a !important;
+}
