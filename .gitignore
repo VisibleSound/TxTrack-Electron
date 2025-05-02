@@ -66,3 +66,6 @@ bld/
 # System files
 .DS_Store
 Thumbs.db
+
+# Build output
+/release-builds/
