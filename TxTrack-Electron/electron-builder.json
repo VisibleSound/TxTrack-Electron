@@ -1,2 +1,7 @@
 {
+  "publish": {
+    "provider": "github",
+    "owner": "VisibleSound",
+    "repo": "TxTrack-Electron"
+  }
 }

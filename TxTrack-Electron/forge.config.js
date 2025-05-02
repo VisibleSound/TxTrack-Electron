@@ -41,11 +41,13 @@ module.exports = {
             name: '@electron-forge/publisher-github',
             config: {
                 repository: {
-                    owner: 'YOUR_USERNAME',
+                    owner: 'VisibleSound',
                     name: 'TxTrack-Electron'
                 },
                 prerelease: false,
-                draft: true
+                draft: true,
+                // Specify the auth token environment variable name
+                authToken: process.env.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
             }
         }
     ],
