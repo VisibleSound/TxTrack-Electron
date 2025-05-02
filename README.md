@@ -2,7 +2,7 @@
 
 TxTrack is a cross-platform desktop application built with Electron and React that helps users track personal transactions and maintain financial awareness. This portfolio project demonstrates modern web technologies and best practices for building responsive, feature-rich desktop applications.
 
-![TxTrack Screenshot](![TxTrack Dashboard](TxTrack-Electron/docs/images/txtrack-dashboard.png))
+![TxTrack Screenshot](![TxTrack Dashboard](C:\Users\offic\Desktop\Desktop\Programming\Electron\TxTrack\TxTrack-Electron\src\docs\images\txtrack-dashboard.png))
 
 ## Features
 
