@@ -3,8 +3,56 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
+// Utility function to check if dependencies are available
+function checkDependencies() {
+    // List of dependencies that should be available at runtime
+    const dependencies = [
+        'electron-updater',
+        'electron-squirrel-startup',
+        'electron-log'
+    ];
+
+    const missing = [];
+
+    // Check each dependency
+    dependencies.forEach(dep => {
+        try {
+            require.resolve(dep);
+        } catch (e) {
+            missing.push(dep);
+            console.error(`Missing dependency: ${dep}`);
+        }
+    });
+
+    // Log all missing dependencies
+    if (missing.length > 0) {
+        console.error(`Missing dependencies: ${missing.join(', ')}`);
+    } else {
+        console.log('All dependencies available');
+    }
+}
+
+// Check dependencies when app starts
+checkDependencies();
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling
-if (require('electron-squirrel-startup')) app.quit();
+try {
+    // Safely require electron-squirrel-startup
+    const squirrelStartup = require('electron-squirrel-startup');
+    if (squirrelStartup) app.quit();
+} catch (err) {
+    console.log('electron-squirrel-startup not available:', err.message);
+    // Check for common squirrel events manually if the module is not available
+    if (process.platform === 'win32') {
+        const cmd = process.argv[1];
+        const squirrelEvents = ['--squirrel-install', '--squirrel-updated', '--squirrel-uninstall', '--squirrel-obsolete'];
+
+        // If this is a squirrel event, quit the app
+        if (cmd && squirrelEvents.includes(cmd)) {
+            app.quit();
+        }
+    }
+}
 
 // Safely import electron-updater, handling the case when it might be missing
 let autoUpdater;

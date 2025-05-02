@@ -16,7 +16,7 @@ export default defineConfig({
                 // Just mark them as external so Vite doesn't try to bundle them incorrectly
                 /^electron-updater/,
                 /^electron-log/,
-                'electron-squirrel-startup'
+                /^electron-squirrel-startup/
             ],
             output: {
                 // Ensure proper handling of external modules
