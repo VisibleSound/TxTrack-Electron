@@ -1,8 +1,8 @@
-# TxTrack - Personal Finance Tracker
-
-TxTrack is a cross-platform desktop application built with Electron and React that helps users track personal transactions and maintain financial awareness. This portfolio project demonstrates modern web technologies and best practices for building responsive, feature-rich desktop applications.
+# TxTrack - Financial Decision Tracker
 
 ![TxTrack Dashboard](docs/images/txtrack-dashboard.png)
+
+TxTrack is a cross-platform desktop application built with Electron and React that helps users track personal transactions and maintain financial awareness. This portfolio project demonstrates modern web technologies and best practices for building responsive, feature-rich desktop applications.
 
 ## Features
 
