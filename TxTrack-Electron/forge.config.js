@@ -46,8 +46,7 @@ module.exports = {
                 },
                 prerelease: false,
                 draft: true,
-                // Specify the auth token environment variable name
-                authToken: process.env.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
+                // Don't include the token directly in the file
             }
         }
     ],
