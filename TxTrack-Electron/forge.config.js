@@ -1,7 +1,12 @@
 module.exports = {
     packagerConfig: {
         asar: true,
-        icon: './src/assets/icons' // This will use the appropriate icon format for each platform
+        icon: './src/assets/icons', // This will use the appropriate icon format for each platform
+        extraResource: [], // Add extra resources if needed
+        // This is important - include electron-updater in the final package
+        ignore: [
+            /node_modules\/(?!(electron-updater|electron-log)\/).*/
+        ]
     },
     rebuildConfig: {},
     makers: [

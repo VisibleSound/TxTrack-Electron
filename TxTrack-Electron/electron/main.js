@@ -2,10 +2,34 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
-const { autoUpdater } = require('electron-updater');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling
 if (require('electron-squirrel-startup')) app.quit();
+
+// Safely import electron-updater, handling the case when it might be missing
+let autoUpdater;
+try {
+    const { autoUpdater: updater } = require('electron-updater');
+    autoUpdater = updater;
+} catch (err) {
+    console.log('electron-updater not available:', err.message);
+    // Create a mock autoUpdater with empty methods if the real one is not available
+    autoUpdater = {
+        logger: console,
+        checkForUpdatesAndNotify: () => Promise.resolve(null),
+        on: () => { },
+        autoDownload: true
+    };
+}
+
+// Try to import electron-log, gracefully handling if it's missing
+let electronLog;
+try {
+    electronLog = require('electron-log');
+} catch (err) {
+    console.log('electron-log not available, using console');
+    electronLog = console;
+}
 
 const isDev = process.env.NODE_ENV === 'development';
 let mainWindow;
@@ -58,18 +82,24 @@ ipcMain.handle('get-app-path', () => app.getPath('userData'));
 // Set up auto-updater with appropriate event handlers
 function setupAutoUpdater() {
     // Configure logging
-    autoUpdater.logger = require('electron-log');
-    autoUpdater.logger.transports.file.level = 'info';
+    autoUpdater.logger = electronLog;
+    if (autoUpdater.logger.transports) {
+        autoUpdater.logger.transports.file.level = 'info';
+    }
 
     // Auto download updates
     autoUpdater.autoDownload = true;
 
     // Check for updates when app starts
-    autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.checkForUpdatesAndNotify().catch(err => {
+        console.error('Error checking for updates:', err);
+    });
 
     // Set up a timer to check for updates every hour
     setInterval(() => {
-        autoUpdater.checkForUpdatesAndNotify();
+        autoUpdater.checkForUpdatesAndNotify().catch(err => {
+            console.error('Error checking for updates:', err);
+        });
     }, 60 * 60 * 1000);
 
     // Auto updater events
@@ -110,6 +140,8 @@ function setupAutoUpdater() {
             if (result.response === 0) {
                 autoUpdater.quitAndInstall();
             }
+        }).catch(err => {
+            console.error('Error showing update dialog:', err);
         });
     });
 }

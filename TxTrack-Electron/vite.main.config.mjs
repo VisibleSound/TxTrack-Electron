@@ -10,7 +10,18 @@ export default defineConfig({
             fileName: () => '[name].js',
         },
         rollupOptions: {
-            external: ['electron', 'electron-updater', 'electron-squirrel-startup'],
+            external: [
+                'electron',
+                // Instead of excluding these entirely, we'll let them be processed
+                // Just mark them as external so Vite doesn't try to bundle them incorrectly
+                /^electron-updater/,
+                /^electron-log/,
+                'electron-squirrel-startup'
+            ],
+            output: {
+                // Ensure proper handling of external modules
+                format: 'cjs',
+            }
         },
         minify: false,
         emptyOutDir: true,
