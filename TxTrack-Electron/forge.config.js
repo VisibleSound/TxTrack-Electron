@@ -8,11 +8,10 @@ module.exports = {
             unpack: "*.node"
         },
         icon: './src/assets/icons', // This will use the appropriate icon format for each platform
-        // This is important - include all required modules in the final package
+        // Include all required modules in the final package
         ignore: [
             /node_modules\/(?!(electron-updater|electron-log|electron-squirrel-startup)\/).*/
         ],
-        // Ensure applicationName is set
         appCopyright: `Copyright © ${new Date().getFullYear()} Alex Lehman`,
         appCategoryType: "public.app-category.finance",
         appBundleId: "com.alexlehman.txtrack",
@@ -29,14 +28,12 @@ module.exports = {
                 // Windows-specific options
                 setupIcon: './src/assets/icons/win/icon.ico',
                 iconUrl: 'https://raw.githubusercontent.com/VisibleSound/TxTrack-Electron/main/src/assets/icons/win/icon.ico',
-                // Important settings for proper installation
+                // Change exe and setup names to TxTrack
                 name: "TxTrack",
                 exe: "TxTrack.exe",
-                noMsi: false,
-                // These ensure proper shortcuts
-                setupExe: "TxTrack-Setup.exe",
+                setupExe: "TxTrack.exe", // This is the main change - creates TxTrack.exe instead of Setup
                 shortcutName: "TxTrack",
-                loadingGif: "./src/assets/loading.gif", // Optional: Create this asset for a branded loading screen
+                loadingGif: "./src/assets/loading.gif", // Keeping the loading gif property as requested
                 createDesktopShortcut: true,
                 createStartMenuShortcut: true,
                 // Registry settings for proper association
@@ -70,7 +67,6 @@ module.exports = {
         {
             name: '@electron-forge/maker-deb',
             config: {
-                // Linux-specific options
                 options: {
                     icon: './src/assets/icons/png/1024x1024.png',
                     categories: ['Finance', 'Utility'],
@@ -81,7 +77,6 @@ module.exports = {
         {
             name: '@electron-forge/maker-rpm',
             config: {
-                // RPM-specific options
                 options: {
                     icon: './src/assets/icons/png/1024x1024.png',
                     categories: ['Finance', 'Utility'],
@@ -108,17 +103,13 @@ module.exports = {
         {
             name: '@electron-forge/plugin-vite',
             config: {
-                // The port vite listens on
                 port: 5173,
-                // Vite build configuration
                 build: [
                     {
-                        // `main` entry point
                         entry: 'electron/main.js',
                         config: 'vite.main.config.mjs',
                     },
                     {
-                        // `preload` entry point
                         entry: 'electron/preload.js',
                         config: 'vite.preload.config.mjs',
                     },
@@ -138,20 +129,34 @@ module.exports = {
     ],
     // Hook to run before packaging starts
     hooks: {
-        // Log environment info before packaging
         prePackage: async () => {
             console.log('Starting packaging process...');
             console.log('Node version:', process.version);
             console.log('Electron Forge version:', require('@electron-forge/cli/package.json').version);
 
-            // Check if required assets exist
+            // Check if required assets exist and create placeholder if needed
             const fs = require('fs');
             const path = require('path');
 
             const iconPath = path.resolve('./src/assets/icons/win/icon.ico');
             console.log('Icon exists:', fs.existsSync(iconPath));
+
+            // Ensure assets directory exists
+            const assetsDir = path.resolve('./src/assets');
+            if (!fs.existsSync(assetsDir)) {
+                fs.mkdirSync(assetsDir, { recursive: true });
+                console.log('Created assets directory');
+            }
+
+            // Create empty loading.gif file if it doesn't exist
+            const loadingGifPath = path.resolve('./src/assets/loading.gif');
+            if (!fs.existsSync(loadingGifPath)) {
+                // Create an empty file (0 bytes) as a placeholder
+                // This prevents the error while building
+                fs.writeFileSync(loadingGifPath, Buffer.alloc(0));
+                console.log('Created empty loading.gif placeholder');
+            }
         },
-        // Run after packaging is complete
         postPackage: async (forgeConfig, packageResult) => {
             console.log('Packaging complete!');
             console.log('Output directory:', packageResult.outputPaths);
