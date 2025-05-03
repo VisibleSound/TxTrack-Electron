@@ -1,17 +1,19 @@
 {
-  "name": "txtrack-electron",
+  "name": "txtrack",
+  "productName": "TxTrack",
   "private": true,
   "version": "0.1.0",
   "description": "TxTrack Desktop Application",
   "main": ".vite/build/main.js",
   "scripts": {
     "dev": "concurrently -k \"vite\" \"electron-forge start\"",
-    "build": "vite build",
+    "build": "vite build && echo 'Vite build completed'",
     "preview": "vite preview",
     "electron:package": "electron-forge package",
-    "electron:make": "electron-forge make",
-    "electron:publish": "electron-forge publish",
-    "start": "electron-forge start"
+    "electron:make": "rimraf out && vite build && electron-forge make",
+    "electron:publish": "cross-env NODE_ENV=production rimraf out && vite build && electron-forge publish",
+    "start": "electron-forge start",
+    "clean": "rimraf dist out .vite"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -56,6 +58,7 @@
     "globals": "^16.0.0",
     "path": "^0.12.7",
     "postcss": "^8.5.3",
+    "rimraf": "^5.0.5",
     "tailwindcss": "^4.1.5",
     "vite": "^6.3.1"
   },
@@ -84,7 +87,17 @@
       "icon": "src/assets/icons/mac/icon.icns"
     },
     "win": {
-      "icon": "src/assets/icons/win/icon.ico"
+      "icon": "src/assets/icons/win/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [ "x64" ]
+        },
+        {
+          "target": "msi",
+          "arch": [ "x64" ]
+        }
+      ]
     },
     "linux": {
       "icon": "src/assets/icons/png",
