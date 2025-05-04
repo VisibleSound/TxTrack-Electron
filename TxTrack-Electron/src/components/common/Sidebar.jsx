@@ -28,7 +28,7 @@ const Sidebar = () => {
 
     return (
         <div
-            className={`fixed left-0 top-0 w-64 h-full overflow-y-auto z-40 
+            className={`h-full w-full overflow-y-auto 
             ${isDarkMode ? 'bg-dark-accent border-r border-gray-500' : 'bg-white border-r border-gray-200'}`}
         >
             {/* Logo - Always use DarkLogo regardless of theme */}

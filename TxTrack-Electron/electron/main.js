@@ -101,6 +101,7 @@ try {
 
 const isDev = process.env.NODE_ENV === 'development';
 let mainWindow;
+let splashWindow;
 
 // Function to determine the correct path to index.html
 function getIndexPath() {
@@ -145,7 +146,75 @@ function getIndexPath() {
     });
 }
 
-const createWindow = () => {
+// Create splash window
+const createSplashWindow = () => {
+    logger.info('Creating splash window');
+
+    splashWindow = new BrowserWindow({
+        width: 400,
+        height: 400,
+        transparent: false,
+        frame: false,
+        resizable: false,
+        movable: false,
+        center: true,
+        webPreferences: {
+            nodeIntegration: false,
+            contextIsolation: true
+        },
+        backgroundColor: '#1D2125', // Background color matching your dark theme
+        show: false
+    });
+
+    const splashPath = isDev
+        ? url.format({
+            pathname: path.join(__dirname, '../src/splash.html'),
+            protocol: 'file:',
+            slashes: true
+        })
+        : url.format({
+            pathname: path.join(__dirname, '../dist/splash.html'),
+            protocol: 'file:',
+            slashes: true
+        });
+
+    // Check if the splash file exists
+    const splashFileExists = fs.existsSync(
+        isDev
+            ? path.join(__dirname, '../src/splash.html')
+            : path.join(__dirname, '../dist/splash.html')
+    );
+
+    if (splashFileExists) {
+        logger.info(`Loading splash screen from: ${splashPath}`);
+        splashWindow.loadURL(splashPath);
+    } else {
+        logger.warn('Splash screen HTML not found, using main window directly');
+        createMainWindow();
+        return;
+    }
+
+    splashWindow.on('closed', () => {
+        splashWindow = null;
+    });
+
+    splashWindow.webContents.on('did-finish-load', () => {
+        splashWindow.show();
+
+        // Create main window after a short delay to show splash
+        setTimeout(() => {
+            createMainWindow();
+        }, 500);
+    });
+
+    // If splash fails to load, go straight to main window
+    splashWindow.webContents.on('did-fail-load', () => {
+        logger.error('Splash screen failed to load, creating main window directly');
+        createMainWindow();
+    });
+};
+
+const createMainWindow = () => {
     logger.info('Creating main window');
 
     // Get the icon path
@@ -176,7 +245,19 @@ const createWindow = () => {
     // Show window once ready to avoid blank flash
     mainWindow.once('ready-to-show', () => {
         logger.info('Window ready to show');
+
+        // First hide the splash window if it exists
+        if (splashWindow && !splashWindow.isDestroyed()) {
+            splashWindow.hide();
+        }
+
+        // Then show the main window
         mainWindow.show();
+
+        // Finally close the splash window
+        if (splashWindow && !splashWindow.isDestroyed()) {
+            splashWindow.close();
+        }
     });
 
     // Add event listeners for debugging
@@ -214,8 +295,8 @@ const createWindow = () => {
 
 // Create window when Electron is ready
 app.whenReady().then(() => {
-    logger.info('App ready, creating window');
-    createWindow();
+    logger.info('App ready, creating splash window');
+    createSplashWindow();
 
     // Set up auto-updater events
     if (!isDev) {
@@ -243,7 +324,7 @@ app.whenReady().then(() => {
         // On macOS re-create a window when dock icon is clicked and no other windows are open
         if (BrowserWindow.getAllWindows().length === 0) {
             logger.info('App activated with no windows, creating window');
-            createWindow();
+            createMainWindow();
         }
     });
 });

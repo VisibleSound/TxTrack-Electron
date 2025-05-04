@@ -11,14 +11,14 @@ const AppLayout = ({ children }) => {
     }, [isDarkMode]);
 
     return (
-        <div className="flex h-screen overflow-auto">
-            {/* Sidebar - always shown with fixed width */}
-            <div className="z-40 w-64 flex-shrink-0">
+        <div className="flex h-screen overflow-hidden">
+            {/* Sidebar - fixed position with higher z-index */}
+            <div className="fixed left-0 top-0 h-full w-64 z-50">
                 <Sidebar />
             </div>
 
-            {/* Main content area - fixed layout, no responsive changes */}
-            <div className="flex-1 overflow-auto mr-24">
+            {/* Main content area - with margin-left to avoid sidebar overlap */}
+            <div className="flex-1 ml-64 overflow-auto">
                 {/* Container with fixed spacing */}
                 <div className="px-8 py-10 pt-16">
                     {/* Content container with fixed width */}

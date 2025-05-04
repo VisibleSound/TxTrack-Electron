@@ -8,38 +8,12 @@ import Transactions from './pages/Transactions';
 import LogTransaction from './pages/LogTransaction';
 import Settings from './pages/Settings';
 import { isStorageAvailable } from './utils/storage';
-import DarkLogo from './assets/DarkLogo.svg';
 import './App.css';
 import './CustomTheme.css';
 
-// Splash Screen component
-const SplashScreen = ({ onFinish, isDarkMode }) => {
-    useEffect(() => {
-        // Simple timer to simulate loading
-        const timer = setTimeout(() => {
-            onFinish();
-        }, 2000);
-
-        return () => clearTimeout(timer);
-    }, [onFinish]);
-
-    return (
-        <div className="h-screen flex flex-col items-center justify-center bg-background-dark text-white">
-            <div className="flex flex-col items-center animate-pulse">
-                <img
-                    src={DarkLogo}
-                    alt="TxTrack Logo"
-                    className="h-24 mb-6"
-                />
-            </div>
-        </div>
-    );
-};
-
-// AppContent component for handling the internal app logic after splash screen
+// AppContent component for handling the internal app logic
 const AppContent = () => {
     const { isDarkMode } = useAppState();
-    const [showSplash, setShowSplash] = useState(true);
     const [storageAvailable, setStorageAvailable] = useState(true);
 
     // Set theme class on body
@@ -53,11 +27,6 @@ const AppContent = () => {
         // Check if localStorage is available
         setStorageAvailable(isStorageAvailable());
     }, []);
-
-    // Handle splash screen completion
-    const handleSplashFinish = () => {
-        setShowSplash(false);
-    };
 
     // Show error if localStorage is not available
     if (!storageAvailable) {
@@ -75,11 +44,6 @@ const AppContent = () => {
                 </button>
             </div>
         );
-    }
-
-    // Show splash screen
-    if (showSplash) {
-        return <SplashScreen onFinish={handleSplashFinish} isDarkMode={isDarkMode} />;
     }
 
     return (

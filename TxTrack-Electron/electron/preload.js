@@ -5,6 +5,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld('electron', {
     getAppPath: () => ipcRenderer.invoke('get-app-path'),
+    getVersion: () => ipcRenderer.invoke('get-version'),
     // Add any other IPC methods your app needs
 });
 
