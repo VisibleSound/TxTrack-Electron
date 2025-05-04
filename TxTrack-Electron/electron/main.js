@@ -364,6 +364,7 @@ ipcMain.handle('get-app-path', () => {
 
 // IPC handler for version info
 ipcMain.handle('get-version', () => {
+    logger.info(`Version requested: ${app.getVersion()}`);
     return app.getVersion();
 });
 

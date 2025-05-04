@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAppState } from '../../contexts/AppStateContext';
 import DarkLogo from '../../assets/DarkLogo.svg';
@@ -12,6 +12,7 @@ import {
 const Sidebar = () => {
     const { isDarkMode, accentColor } = useAppState();
     const location = useLocation();
+    const [appVersion, setAppVersion] = useState('0.1.0'); // Default fallback version
 
     // Navigation items
     const navItems = [
@@ -20,6 +21,23 @@ const Sidebar = () => {
         { name: 'Log Transaction', path: '/log-transaction', icon: PlusCircleIcon },
         { name: 'Settings', path: '/settings', icon: Cog6ToothIcon }
     ];
+
+    // Fetch version on component mount
+    useEffect(() => {
+        const getVersion = async () => {
+            // Try to get version from Electron if available
+            if (window.electron && window.electron.getVersion) {
+                try {
+                    const version = await window.electron.getVersion();
+                    setAppVersion(version);
+                } catch (err) {
+                    console.error('Failed to get app version:', err);
+                }
+            }
+        };
+
+        getVersion();
+    }, []);
 
     // Check if a navigation item is active
     const isActive = (path) => {
@@ -78,7 +96,7 @@ const Sidebar = () => {
                     className={`text-xs text-center ${isDarkMode ? 'text-gray-500' : 'text-gray-400'
                         }`}
                 >
-                    TxTrack v0.1.0
+                    TxTrack v{appVersion}
                 </p>
             </div>
         </div>
